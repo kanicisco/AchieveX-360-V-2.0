@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AchieveX 360 · Activity Outlet Achievements Dashboard</title>
+    <meta name="description" content="Excel-driven enterprise activity outlet achievement analytics platform for FMCG sales monitoring.">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AchieveX 360">
+    <link rel="apple-touch-icon" href="AchieveX 360 Analytics Logo.png">
+
+    <!-- Bootstrap 5 CSS & Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom Application CSS -->
+    <link rel="stylesheet" href="assets/css/style.css?v=20261016">
+
+    <style>
+        :root {
+            --navy: #0f172a;
+            --blue: #2563eb;
+            --blue-dark: #1d4ed8;
+            --teal: #0d9488;
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --muted: #64748b;
+            --line: #e2e8f0;
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --card-border: rgba(226, 232, 240, 0.9);
+            --card-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.02);
+        }
+
+        [data-theme="dark"], [data-bs-theme="dark"] {
+            --bg: #080d1a;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --line: #1e293b;
+            --card-bg: rgba(15, 23, 42, 0.88);
+            --card-border: rgba(51, 65, 85, 0.8);
+            --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4, h5, .title {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        .screen-watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 62vw;
+            max-width: 680px;
+            min-width: 280px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.07;
+            user-select: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            filter: drop-shadow(0 0 35px rgba(37, 99, 235, 0.25));
+            transition: opacity 0.4s ease, filter 0.4s ease, transform 0.4s ease;
+            animation: watermarkFloat 14s ease-in-out infinite alternate;
+        }
+
+        [data-theme="dark"] .screen-watermark, [data-bs-theme="dark"] .screen-watermark {
+            opacity: 0.095;
+            filter: brightness(1.25) contrast(115%) drop-shadow(0 0 45px rgba(59, 130, 246, 0.45));
+        }
+
+        .screen-watermark img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        @keyframes watermarkFloat {
+            0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            50% { transform: translate(-50%, -52%) scale(1.02) rotate(0.5deg); }
+            100% { transform: translate(-50%, -48%) scale(0.98) rotate(-0.5deg); }
+        }
+
+        @keyframes pulseDot {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            50% { transform: scale(1.25); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.7; }
+        }
+
+        header.app-header {
+            padding: 14px 4%;
+            background: linear-gradient(135deg, #0b1727 0%, #1e3a8a 50%, #0d9488 100%);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .logo-pill {
+            background: rgba(255,255,255,0.98);
+            padding: 5px 12px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.22), 0 0 16px rgba(37,99,235,0.35);
+            border: 1px solid rgba(255,255,255,0.6);
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        .logo-pill:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 6px 24px rgba(37,99,235,0.45);
+        }
+
+        .logo-pill img {
+            height: 44px;
+            max-height: 48px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .wrap {
+            max-width: 1680px;
+            margin: auto;
+            padding: 20px 3%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dash-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 16px 18px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .dash-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px -5px rgba(37, 99, 235, 0.14);
+            border-color: rgba(37, 99, 235, 0.3);
+        }
+
+        .kpi-title {
+            color: var(--muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .kpi-num {
+            font-size: 26px;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.2;
+        }
+
+        .filters-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+        }
+
+        .catbox {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 8px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: var(--card-bg);
+            padding: 10px;
+            max-height: 160px;
+            overflow-y: auto;
+        }
+
+        .catbox label {
+            display: inline-flex;
+            flex: 0 0 auto;
+            align-items: center;
+            gap: 6px;
+            margin: 0;
+            padding: 5px 10px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text);
+            font-size: 11.5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .catbox label.active, .catbox label:has(input:checked) {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            border-color: #2563eb;
+            color: #ffffff;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+        }
+
+        .table-container {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .scroll-wrapper {
+            overflow: auto;
+            max-height: 65vh;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table.achievex-table {
+            border-collapse: collapse;
+            width: 100%;
+            white-space: nowrap;
+            font-size: 12px;
+            margin: 0;
+        }
+
+        table.achievex-table th {
+            position: sticky;
+            top: 0;
+            background-color: var(--card-bg) !important;
+            color: var(--text);
+            z-index: 10;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        #groupheads th {
+            top: 0;
+            background-color: #dbeafe !important;
+            color: #1e40af !important;
+            text-align: center;
+            font-weight: 800;
+            z-index: 12;
+            border-bottom: 1px solid #bfdbfe;
+        }
+
+        #heads th {
+            top: 36px;
+            background-color: #eff6ff !important;
+            color: #1e3a8a !important;
+            z-index: 11;
+            font-weight: 700;
+            border-bottom: 2px solid #bfdbfe;
+        }
+
+        #groupheads th[rowspan="2"] {
+            top: 0;
+            background-color: #dbeafe !important;
+            z-index: 13;
+        }
+
+        [data-theme="dark"] #groupheads th, [data-bs-theme="dark"] #groupheads th {
+            background-color: #1e3a8a !important;
+            color: #ffffff !important;
+            border-bottom-color: #3b82f6;
+        }
+
+        [data-theme="dark"] #heads th, [data-bs-theme="dark"] #heads th {
+            background-color: #0f172a !important;
+            color: #93c5fd !important;
+            border-bottom-color: #1e293b;
+        }
+
+        [data-theme="dark"] #groupheads th[rowspan="2"], [data-bs-theme="dark"] #groupheads th[rowspan="2"] {
+            background-color: #1e293b !important;
+            color: #f8fafc !important;
+        }
+
+        table.achievex-table td {
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--line);
+            vertical-align: middle;
+        }
+
+        table.achievex-table tbody tr:hover {
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .slab {
+            display: inline-block;
+            padding: 3px 9px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 11px;
+            border: 1px solid transparent;
+        }
+        .slab-diamond { background: rgba(59, 130, 246, 0.15); color: #2563eb; border-color: rgba(59, 130, 246, 0.3); }
+        .slab-platinum { background: rgba(139, 92, 246, 0.15); color: #7c3aed; border-color: rgba(139, 92, 246, 0.3); }
+        .slab-gold { background: rgba(245, 158, 11, 0.15); color: #d97706; border-color: rgba(245, 158, 11, 0.3); }
+        .slab-silver { background: rgba(148, 163, 184, 0.2); color: #475569; border-color: rgba(148, 163, 184, 0.4); }
+        .slab-bronze, .slab-bronzed, .slab-brozne { background: rgba(217, 119, 6, 0.15); color: #b45309; border-color: rgba(217, 119, 6, 0.3); }
+        .slab-sapphire { background: rgba(6, 182, 212, 0.15); color: #0891b2; border-color: rgba(6, 182, 212, 0.3); }
+        .slab-nestmo { background: rgba(16, 185, 129, 0.15); color: #059669; border-color: rgba(16, 185, 129, 0.3); }
+
+        /* % Achievement - Slab Display Format (Bold Black font on Green with ⭐, Bold Dark Blue on Light Blue) */
+        .pct-slab {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 800 !important;
+            font-size: 11.5px;
+            letter-spacing: -0.01em;
+            line-height: 1.25;
+            border: 1px solid transparent;
+            white-space: nowrap;
+            text-align: center;
+        }
+        .pct-slab-green {
+            background-color: #86efac !important;
+            color: #000000 !important;
+            border-color: #4ade80 !important;
+            box-shadow: 0 1px 3px rgba(22, 163, 74, 0.25);
+            font-weight: 800 !important;
+        }
+        .pct-slab-blue {
+            background-color: #dbeafe !important;
+            color: #1e3a8a !important;
+            border-color: #bfdbfe !important;
+            box-shadow: 0 1px 2px rgba(37, 99, 235, 0.08);
+            font-weight: 800 !important;
+        }
+        [data-theme="dark"] .pct-slab-green, [data-bs-theme="dark"] .pct-slab-green {
+            background-color: #22c55e !important;
+            color: #000000 !important;
+            border-color: #86efac !important;
+            font-weight: 800 !important;
+        }
+        [data-theme="dark"] .pct-slab-blue, [data-bs-theme="dark"] .pct-slab-blue {
+            background-color: #bfdbfe !important;
+            color: #0f172a !important;
+            border-color: #93c5fd !important;
+            font-weight: 800 !important;
+        }
+
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+        }
+        th.sortable:hover {
+            color: #2563eb !important;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Background Watermark -->
+<div class="screen-watermark" id="screenWatermark" aria-hidden="true">
+    <img src="AchieveX 360 Analytics Logo BG.png" alt="AchieveX 360 Watermark" onerror="this.src='AchieveX 360 Analytics Logo.png'">
+</div>
+
+<!-- Header -->
+<header class="app-header">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <div class="logo-pill">
+                <img src="AchieveX 360 Analytics Logo BG.png" alt="AchieveX 360 Logo" onerror="this.src='AchieveX 360 Analytics Logo.png'">
+            </div>
+            <div>
+                <h1 class="mb-0 fs-4 fw-extrabold text-white d-flex align-items-center gap-2">
+                    <span style="background: linear-gradient(135deg, #ffffff 0%, #93c5fd 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AchieveX 360</span>
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle fs-6 rounded-pill px-2 py-1">Enterprise Analytics</span>
+                </h1>
+                <p class="mb-0 text-info-emphasis small" id="headerSubtitle" style="color: #93c5fd !important;">Activity Outlet Achievements · Q4 2026 (H2)</p>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <span class="badge d-inline-flex align-items-center gap-1 px-3 py-2 rounded-pill" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.4);">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: #34d399; animation: pulseDot 2s infinite;"></span>
+                100%+ Highlight Active
+            </span>
+            <button id="btn-view-discrepancies" type="button" class="btn btn-warning btn-sm rounded-pill fw-bold" title="Click to view the 78 documented uncalculated formula rows in source Excel">
+                ⚠️ 78 Discrepancies
+            </button>
+            <button id="watermarkToggle" type="button" class="btn btn-outline-light btn-sm rounded-pill">
+                💧 Watermark: On
+            </button>
+            <button id="themeToggle" type="button" class="btn btn-outline-light btn-sm rounded-pill">
+                🌙 Dark Theme
+            </button>
+            <button id="adminOpen" type="button" class="btn btn-primary btn-sm rounded-pill px-3 fw-bold shadow-sm">
+                <i class="bi bi-gear-fill me-1"></i> Admin & Upload
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="wrap">
+    <!-- Top Metadata Bar -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <span class="badge bg-primary text-white" id="badge-active-period">
+                📅 Period: Q4 2026 (H2)
+            </span>
+            <span class="badge bg-secondary-subtle text-secondary border" id="badge-active-file">
+                📁 Source: Activity outlet Achievements - 2026 - Q4.xlsb
+            </span>
+            <span class="badge bg-light text-muted border" id="badge-last-updated">
+                🕒 Live Synced
+            </span>
+        </div>
+        <div>
+            <span class="text-muted small fw-semibold" id="sourceCount">916 total outlets in dataset</span>
+        </div>
+    </div>
+
+    <!-- Clean KPI Metric Cards Grid -->
+    <div class="row g-3 mb-4">
+        <!-- Matching Outlets -->
+        <div class="col-6 col-md-4 col-xl">
+            <div class="dash-card">
+                <div class="kpi-title">Matching Outlets</div>
+                <div class="kpi-num text-primary" id="count">—</div>
+                <small class="text-muted" style="font-size:10px;">Filtered Outlets</small>
+            </div>
+        </div>
+        <!-- 100%+ Outlets -->
+        <div class="col-6 col-md-4 col-xl">
+            <div class="dash-card" style="border-left: 4px solid #10b981;">
+                <div class="kpi-title text-success">100%+ Achieved Outlets</div>
+                <div class="kpi-num text-success" id="achievedCount">—</div>
+                <small class="text-success fw-bold" style="font-size:10px;">Target Met ⭐</small>
+            </div>
+        </div>
+        <!-- Distributors -->
+        <div class="col-6 col-md-4 col-xl">
+            <div class="dash-card">
+                <div class="kpi-title">Distributors</div>
+                <div class="kpi-num text-dark" id="dist">—</div>
+                <small class="text-muted" style="font-size:10px;">Active Partners</small>
+            </div>
+        </div>
+        <!-- Sales Execs (SSE) / Regions -->
+        <div class="col-6 col-md-4 col-xl">
+            <div class="dash-card">
+                <div class="kpi-title">Sales Execs (SSE)</div>
+                <div class="kpi-num text-dark" id="sse">—</div>
+                <small class="text-muted" style="font-size:10px;">Clusters / Sectors</small>
+            </div>
+        </div>
+        <!-- DSRs -->
+        <div class="col-6 col-md-4 col-xl">
+            <div class="dash-card">
+                <div class="kpi-title">DSRs</div>
+                <div class="kpi-num text-dark" id="dsr">—</div>
+                <small class="text-muted" style="font-size:10px;">Field Reps</small>
+            </div>
+        </div>
+        <!-- Slab Tiers -->
+        <div class="col-6 col-md-4 col-xl">
+            <div class="dash-card">
+                <div class="kpi-title">Slab Categories</div>
+                <div class="kpi-num text-dark" id="slabs">—</div>
+                <small class="text-muted" style="font-size:10px;">Classification Tiers</small>
+            </div>
+        </div>
+        <!-- Activities -->
+        <div class="col-6 col-md-4 col-xl">
+            <div class="dash-card">
+                <div class="kpi-title">Activities</div>
+                <div class="kpi-num text-dark" id="activities">—</div>
+                <small class="text-muted" style="font-size:10px;">Campaign Channels</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visual Analytics Charts Grid -->
+    <div class="row g-3 mb-4">
+        <!-- Monthly Performance Trend Combo Chart -->
+        <div class="col-lg-7">
+            <div class="dash-card h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <strong class="title mb-0 fs-6">📊 Monthly Performance Trend (Target vs Achievement vs %)</strong>
+                    <span class="badge bg-light text-muted border small">Oct · Nov · Dec</span>
+                </div>
+                <div style="position: relative; height: 260px; width: 100%;">
+                    <canvas id="monthlyTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- Slab Distribution Doughnut Chart -->
+        <div class="col-lg-5">
+            <div class="dash-card h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <strong class="title mb-0 fs-6">🏷️ Outlets by Slab & Tier</strong>
+                    <span class="badge bg-light text-muted border small">All Tiers</span>
+                </div>
+                <div style="position: relative; height: 260px; width: 100%;">
+                    <canvas id="slabChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- Activity Breakdown Horizontal Chart -->
+        <div class="col-lg-6">
+            <div class="dash-card h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <strong class="title mb-0 fs-6">🎯 Activity Campaign Performance</strong>
+                    <span class="badge bg-light text-muted border small">Target vs Achieved</span>
+                </div>
+                <div style="position: relative; height: 250px; width: 100%;">
+                    <canvas id="activityChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- Distributor Leaderboard Chart -->
+        <div class="col-lg-6">
+            <div class="dash-card h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <strong class="title mb-0 fs-6">🏆 Distributor Achievement Leaderboard</strong>
+                    <span class="badge bg-light text-muted border small">Top Ranked</span>
+                </div>
+                <div style="position: relative; height: 250px; width: 100%;">
+                    <canvas id="distributorChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dynamic Filter Controls Box -->
+    <section class="filters-box">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div>
+                <strong class="title mb-0 fs-6"><i class="bi bi-funnel-fill text-primary me-2"></i>Filter Outlets & Period Settings</strong>
+                <span class="text-muted small ms-2">· Real-time multi-dimensional aggregation</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <!-- Discrepancy Toggle Switch -->
+                <div class="form-check form-switch d-inline-flex align-items-center gap-2 m-0 p-0">
+                    <input class="form-check-input ms-0" type="checkbox" id="discrepancyToggle" style="cursor:pointer;">
+                    <label class="form-check-label small fw-semibold" for="discrepancyToggle">
+                        Reconciliation: <span id="discrepancyModeLabel" class="badge bg-success">Reconciled Sums (Oct + Nov + Dec)</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+            <!-- Year -->
+            <div class="col-6 col-md-4 col-lg-2">
+                <label class="form-label small fw-bold text-muted mb-1">Year</label>
+                <select id="filter-year" class="form-select form-select-sm"></select>
+            </div>
+            <!-- Half-Year -->
+            <div class="col-6 col-md-4 col-lg-2">
+                <label class="form-label small fw-bold text-muted mb-1">Half-Year</label>
+                <select id="filter-halfyear" class="form-select form-select-sm"></select>
+            </div>
+            <!-- Quarter -->
+            <div class="col-6 col-md-4 col-lg-2">
+                <label class="form-label small fw-bold text-muted mb-1">Quarter</label>
+                <select id="filter-quarter" class="form-select form-select-sm"></select>
+            </div>
+            <!-- Month Selection -->
+            <div class="col-6 col-md-4 col-lg-3">
+                <label class="form-label small fw-bold text-primary mb-1">Month Period</label>
+                <select id="filter-month" class="form-select form-select-sm fw-bold border-primary"></select>
+            </div>
+            <!-- Target % Status -->
+            <div class="col-6 col-md-4 col-lg-3">
+                <label class="form-label small fw-bold text-muted mb-1">Achievement Status</label>
+                <select id="filter-status-pct" class="form-select form-select-sm">
+                    <option value="ALL">All Achievement Levels</option>
+                    <option value="100_PLUS">⭐ 100%+ Achieved (Target Met)</option>
+                    <option value="80_TO_100">80% - 99.9% (Near Target)</option>
+                    <option value="50_TO_80">50% - 79.9% (In Progress)</option>
+                    <option value="UNDER_50">&lt; 50% (Needs Attention)</option>
+                </select>
+            </div>
+
+            <!-- Distributor -->
+            <div class="col-6 col-md-4 col-lg-3">
+                <label class="form-label small fw-bold text-muted mb-1">Distributor</label>
+                <select id="filter-distributor" class="form-select form-select-sm"></select>
+            </div>
+            <!-- Region / SSE -->
+            <div class="col-6 col-md-4 col-lg-3">
+                <label class="form-label small fw-bold text-muted mb-1">Region / SSE</label>
+                <select id="filter-sse" class="form-select form-select-sm"></select>
+            </div>
+            <!-- DSR -->
+            <div class="col-6 col-md-4 col-lg-2">
+                <label class="form-label small fw-bold text-muted mb-1">DSR</label>
+                <select id="filter-dsr" class="form-select form-select-sm"></select>
+            </div>
+            <!-- Activity -->
+            <div class="col-6 col-md-4 col-lg-2">
+                <label class="form-label small fw-bold text-muted mb-1">Activity</label>
+                <select id="filter-activity" class="form-select form-select-sm"></select>
+            </div>
+            <!-- Slab -->
+            <div class="col-6 col-md-4 col-lg-2">
+                <label class="form-label small fw-bold text-muted mb-1">Slab</label>
+                <select id="filter-slab" class="form-select form-select-sm"></select>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="row g-2 mb-3">
+            <div class="col-md-12">
+                <label class="form-label small fw-bold text-muted mb-1">Search Retailer Name, Code or URC</label>
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input id="filter-retailer-search" type="text" class="form-control" placeholder="Search by Retailer Code (e.g. 502528701682), Retailer Name (e.g. GUNSIRI), or URC...">
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Columns Selector -->
+        <div class="mb-3">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+                <div class="d-flex align-items-center gap-2">
+                    <label class="form-label small fw-bold text-muted mb-0">Product Category Columns</label>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <input type="radio" class="btn-check" name="cat-mode" id="cat-mode-union" value="UNION" checked>
+                        <label class="btn btn-outline-secondary btn-sm py-0 px-2" for="cat-mode-union" style="font-size:11px;">Union</label>
+                        <input type="radio" class="btn-check" name="cat-mode" id="cat-mode-intersect" value="INTERSECTION">
+                        <label class="btn btn-outline-secondary btn-sm py-0 px-2" for="cat-mode-intersect" style="font-size:11px;">Intersection</label>
+                    </div>
+                </div>
+                <div class="d-flex gap-1">
+                    <button type="button" class="btn btn-outline-primary btn-sm py-0 px-2" id="catAll" style="font-size:11px;">Select all</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm py-0 px-2" id="catClear" style="font-size:11px;">Clear</button>
+                </div>
+            </div>
+            <div class="catbox" id="category" aria-label="Select categories"></div>
+            <small class="text-muted d-block mt-1" style="font-size:11px;">Tick categories to display their achievement values as columns in the data table below.</small>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex gap-2 flex-wrap justify-content-between align-items-center pt-2 border-top">
+            <button class="btn btn-outline-danger btn-sm fw-semibold" id="btn-reset-filters">
+                <i class="bi bi-arrow-counterclockwise me-1"></i> Reset All Filters
+            </button>
+            <div class="d-flex gap-2 flex-wrap">
+                <button class="btn btn-outline-secondary btn-sm fw-semibold" id="btn-print-dashboard">
+                    <i class="bi bi-printer me-1"></i> Print View
+                </button>
+                <button class="btn btn-outline-primary btn-sm fw-semibold" id="btn-export-json">
+                    <i class="bi bi-file-earmark-code me-1"></i> Backup JSON
+                </button>
+                <button class="btn btn-outline-success btn-sm fw-semibold" id="btn-export-all-csv">
+                    <i class="bi bi-file-earmark-spreadsheet me-1"></i> Export All CSV
+                </button>
+                <button class="btn btn-success btn-sm fw-bold shadow-sm" id="btn-export-csv">
+                    <i class="bi bi-download me-1"></i> Export Filtered CSV
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Outlet Performance Data Table -->
+    <section class="table-container">
+        <div class="p-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <strong class="fs-6"><i class="bi bi-table text-primary me-2"></i>Activity Outlet Performance Records</strong>
+                <span id="result" class="text-muted small ms-2"></span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <label class="form-label small text-muted mb-0">Show:</label>
+                <select id="table-page-size" class="form-select form-select-sm w-auto">
+                    <option value="15" selected>15 rows</option>
+                    <option value="25">25 rows</option>
+                    <option value="50">50 rows</option>
+                    <option value="100">100 rows</option>
+                    <option value="-1">All rows</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="scroll-wrapper">
+            <table class="achievex-table">
+                <thead>
+                    <tr id="groupheads"></tr>
+                    <tr id="heads"></tr>
+                </thead>
+                <tbody id="body"></tbody>
+            </table>
+        </div>
+
+        <div class="p-3 border-top d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <span id="range" class="text-muted small"></span>
+            <div class="btn-group btn-group-sm">
+                <button class="btn btn-outline-secondary" id="prev"><i class="bi bi-chevron-left me-1"></i> Previous</button>
+                <button class="btn btn-outline-primary" id="next">Next <i class="bi bi-chevron-right ms-1"></i></button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Admin Management Modal -->
+<div class="modal fade" id="adminModal" tabindex="-1" aria-labelledby="adminModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold" id="adminModalLabel">
+                    <i class="bi bi-sliders me-2"></i> AchieveX 360 · Admin & Excel Workbook Management
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <!-- Dropzone for replacement workbook -->
+                <div class="border-2 border-dashed rounded-3 p-4 text-center mb-4 bg-light" id="excel-dropzone" style="cursor: pointer; border: 2px dashed #93c5fd;">
+                    <div class="fs-1 text-primary mb-2"><i class="bi bi-cloud-arrow-up-fill"></i></div>
+                    <h6 class="fw-bold mb-1">Drag and Drop Excel Workbook Here</h6>
+                    <p class="text-muted small mb-2">Supported formats: <strong>.xlsb, .xlsx, .xls, .csv</strong></p>
+                    <label class="btn btn-primary btn-sm px-4 fw-bold shadow-sm" style="cursor: pointer;">
+                        Browse Computer
+                        <input id="adminFile" type="file" accept=".xlsb,.xlsx,.xls,.csv" style="display:none;">
+                    </label>
+                </div>
+
+                <div id="adminStatus" class="mb-3 small"></div>
+
+                <!-- Preview Area -->
+                <div id="import-preview-area"></div>
+
+                <!-- Fast Actions & Sample Datasets -->
+                <div class="card border-0 bg-light p-3 mt-4">
+                    <h6 class="fw-bold mb-2">⚡ Fast Dataset Switching & Testing</h6>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button id="btn-restore-original" type="button" class="btn btn-outline-primary btn-sm fw-semibold">
+                            <i class="bi bi-arrow-repeat me-1"></i> Restore Original Q4 2026 Dataset
+                        </button>
+                        <button id="btn-load-sample-1" type="button" class="btn btn-outline-secondary btn-sm">
+                            Load Sample 1 (H1 2026)
+                        </button>
+                        <button id="btn-load-sample-2" type="button" class="btn btn-outline-secondary btn-sm">
+                            Load Sample 2 (FY 2026-27 H2)
+                        </button>
+                        <button id="btn-clear-dataset" type="button" class="btn btn-outline-danger btn-sm ms-auto">
+                            <i class="bi bi-trash3 me-1"></i> Clear Existing Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <small class="text-muted me-auto">Changes persist in browser LocalStorage, IndexedDB, and MySQL database.</small>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Discrepancy Inspection Modal -->
+<div class="modal fade" id="discrepancyModal" tabindex="-1" aria-labelledby="discrepancyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title fw-bold" id="discrepancyModalLabel">
+                    <i class="bi bi-shield-exclamation me-2"></i> Source Workbook Discrepancy & Validation Report
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4" id="discrepancy-modal-body">
+                <!-- Loaded dynamically by AdminMapper.showDiscrepancyModal() -->
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Application Dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<!-- Modular Application Scripts -->
+<script src="assets/js/excel-parser.js?v=20261016b"></script>
+<script src="assets/js/data-manager.js?v=20261016b"></script>
+<script src="assets/js/charts.js?v=20261016b"></script>
+<script src="assets/js/filters.js?v=20261016b"></script>
+<script src="assets/js/table.js?v=20261016b"></script>
+<script src="assets/js/admin-mapper.js?v=20261016b"></script>
+<script src="assets/js/export.js?v=20261016b"></script>
+<script src="assets/js/app.js?v=20261016b"></script>
+
+</body>
+</html>

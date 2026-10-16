@@ -1,0 +1,23 @@
+{
+  "short_name": "AchieveX 360",
+  "name": "AchieveX 360 - Activity & Outlet Achievement Dashboard",
+  "icons": [
+    {
+      "src": "AchieveX 360 Analytics Logo.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "AchieveX 360 Analytics Logo BG.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./",
+  "background_color": "#0b1727",
+  "theme_color": "#1e3a8a",
+  "display": "standalone",
+  "orientation": "any",
+  "description": "Interactive Excel-Driven Dynamic Analytics & Outlet Achievement Dashboard"
+}
